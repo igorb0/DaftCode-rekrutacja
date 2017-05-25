@@ -1,15 +1,16 @@
 import datetime
 import pprint
 import time
-import sqlite3
 import json
-import aiohttp
+import os
+
 import pandas as pd
+import requests
+import aiohttp
+import sqlite3
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import requests
 
 
 from matplotlib import style
@@ -20,6 +21,7 @@ URL = 'http://api.nbp.pl/api/exchangerates/tables/{table}/{startDate}/{endDate}/
 URL_single_curr = 'http://api.nbp.pl/api/exchangerates/rates/{table}/{code}/{startDate}/{endDate}/'
 TABLE_TYPE = 'A'
 DELTA = 92
+
 
 def create_tables():
     con = sqlite3.connect('nbp.db')
@@ -34,6 +36,7 @@ def create_tables():
     con.commit()
     con.close()
 
+#Add date from all currency to datebase. This function is useing in config file.
 def add_to_db(start_date, end_date, contents):
     
     con = sqlite3.connect('nbp.db')
@@ -44,6 +47,7 @@ def add_to_db(start_date, end_date, contents):
             con.commit()
     con.close()
 
+#Add date from single currency to datebase. 
 def add_to_db_single_curr(start_date, end_date, contents):
     
     con = sqlite3.connect('nbp.db')
@@ -53,6 +57,7 @@ def add_to_db_single_curr(start_date, end_date, contents):
         con.commit()
     con.close()
 
+#Get data from nbp api for single current
 def get_data_from_nbp_single_curr(table, curr_code, start_date, end_date):
     r = requests.get(
         URL_single_curr.format(
@@ -64,9 +69,9 @@ def get_data_from_nbp_single_curr(table, curr_code, start_date, end_date):
                         params={'format': 'json'},
         )
     parsed_json = r.json()
-    #return parsed_json
     add_to_db_single_curr(start_date, end_date, parsed_json)
 
+#Get data from nbp api for all current
 def get_data_from_nbp(table, start_date, end_date):
     r = requests.get(
         URL.format(
@@ -79,6 +84,7 @@ def get_data_from_nbp(table, start_date, end_date):
     parsed_json = r.json()
     add_to_db(start_date, end_date, parsed_json)
 
+#Get data from nbp api for single current in 92 record parts (nbp api restriction)
 def get_data_from_nbp_max(table, code, START_DATE, END_DATE):
     full_delta = END_DATE - START_DATE
     how_many_runs = full_delta.days / DELTA
@@ -104,7 +110,7 @@ def get_data_from_db(currency, start, stop):
 
     return data, currency
 
-
+#Create chart and save it in static folder and in db as binary file
 def chart(data, currency):
 
     df = pd.DataFrame(data = data, columns = ['date', 'mid'])

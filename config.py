@@ -1,8 +1,8 @@
 import datetime
 import pprint
 import time
-import sqlite3
 
+import sqlite3
 import requests
 
 import functions
@@ -10,9 +10,8 @@ import functions
 TABLE_TYPE = 'A'
 
 START_DATE = datetime.date.today() - datetime.timedelta(days=6)
-print(START_DATE)
 END_DATE = datetime.date.today()
-print(END_DATE)
+#Number of record which can be download at one time from nbp api
 DELTA = 92
 
 

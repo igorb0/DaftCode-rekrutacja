@@ -10,7 +10,8 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 @app.route('/USD', methods=['GET'])
 def redirect_homepage():
-    
+
+    #Get current time to present current data on homepage
     now = datetime.date.today().strftime('%Y-%m-%d')
     past = (datetime.date.today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d')
     return redirect(url_for('.homepage', waluta = 'USD', start = past, stop = now))
@@ -24,7 +25,7 @@ def homepage(waluta, start, stop):
     stop = datetime.datetime.strptime(stop, '%Y-%m-%d')
 
     data, curr = functions.get_data_from_db(waluta, str(start), str(stop))
-
+    #Check if requested data are in date base or which part of data are in datebase
     if len(data) == 0:
         functions.get_data_from_nbp_max('A', waluta, start, stop)
         data, curr = functions.get_data_from_db(waluta, start, stop)
@@ -56,11 +57,11 @@ def homepage_change(waluta):
 
     start = request.form['text_od']
     stop = request.form['text_do']
-
     return redirect(url_for('.homepage', waluta = waluta, start = start, stop = stop))
 
 @app.route('/table/<waluta>/<start>/<stop>/', methods=['GET'])
 def table(waluta, start, stop):
+
     data, curr = functions.get_data_from_db(waluta, str(start), str(stop))
     return render_template("table.html", cur = waluta, lista = data, start = start, stop = stop)
 
@@ -71,6 +72,7 @@ def chart(waluta, chart_name):
 
 @app.route('/clear_cache', methods=['GET'])
 def clear_cache():
+
     con = sqlite3.connect('nbp.db')
     cur = con.cursor() 
     cur.execute("DELETE FROM currency") 
