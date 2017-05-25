@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title>Notowania kursów walut</title>
+</head>
+
+<body>
+
+    <h1>Notowania kursów {{cur}}</h1>
+    <img src="{{chart}}"> 
+    
+    <table border="2" cellpadding="10">
+    <thead><tr><th>Data</th><th>Kurs</th></tr></thead>
+    <tbody>
+    {% for item in lista %}
+    <tr><td>{{item[0]}}</td><td>{{item[1]}}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    <h2>Zmiana zakresu czasowego(YY-MM-DD)</h2>
+    <form action="{{zapytanie}}" method="POST">
+        od <input type="text" name="text_od"> 
+        do <input type="text" name="text_do"> 
+        <input type="submit" name="my-form" value="Ok">
+    </form>
+
+
+    <h2><a href={{ url_for('.table', waluta = cur, start = start, stop =  stop)}}> Tabela </a><br/></h2>
+    <h2><a href={{ url_for('.chart', waluta = cur, chart_name = chart)}}> Wykres </a><br/></h2>
+    <h2><a href={{ url_for('.clear_cache')}}> Czyszczenie cache </a><br/></h2>
+   
+
+    <h2>Kursy pozostałych walut</h2>
+    <h3><a href={{ url_for('.homepage', waluta = 'CHF', start = start, stop =  stop)}}> Kurs franka szwajcarskiego (CHF) </a><br/></h3>
+    <h3><a href={{ url_for('.homepage', waluta = 'AUD', start = start, stop =  stop)}}> Kurs dolara australijskiego (AUD) </a><br/></h3>
+    <h3><a href={{ url_for('.homepage', waluta = 'HKD', start = start, stop =  stop)}}> Kurs dolara Hongkongu (HKD) </a><br/></h3>
+    <h3><a href={{ url_for('.homepage', waluta = 'CAD', start = start, stop =  stop)}}> Kurs dolara kanadyjski (CAD) </a><br/></h3>
+    <h3><a href={{ url_for('.homepage', waluta = 'EUR', start = start, stop =  stop)}}> Kurs euro (EUR) </a><br/></h3>
+    <h3><a href={{ url_for('.homepage', waluta = 'NDZ', start = start, stop =  stop)}}> Kurs dolara nowozelandzkiego (NDZ) </a><br/></h3>
+
+    
+
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title>Notowania kursów walut</title>
+</head>
+
+<body>
+
+    <h1>Notowania kursów USD</h1>
+    <img src="{{chart}}"> 
+    
+    <table border="2" cellpadding="10">
+    <thead><tr><th>Data</th><th>Kurs</th></tr></thead>
+    <tbody>
+    {% for item in lista %}
+    <tr><td>{{item[0]}}</td><td>{{item[1]}}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    <h2>Zmiana zakresu czasowego(YY-MM-DD)</h2>
+    <form action="/USD" method="POST">
+        od <input type="text" name="text_od"> 
+        do <input type="text" name="text_do"> 
+        <input type="submit" name="my-form" value="Ok">
+    </form>
+
+    <h2> Kursy pozostałych walut </h2>
+    <h3><a href={{ url_for('.homepage', waluta = 'CHF', start = start, stop =  stop)}}> Kurs franka szwajcarskiego (CHF) </a><br/></h3>
+
+
+</body>
+</html>
+
